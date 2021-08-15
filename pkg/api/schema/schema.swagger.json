@@ -1440,6 +1440,9 @@
         },
         "followerPwd": {
           "type": "string"
+        },
+        "excludeCommitTime": {
+          "type": "boolean"
         }
       }
     },

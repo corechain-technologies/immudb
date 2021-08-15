@@ -337,6 +337,7 @@ message DatabaseSettings {
 	uint32 srcPort = 5;
 	string followerUsr = 6;
 	string followerPwd = 7;
+	bool excludeCommitTime = 8;
 }
 
 message Table {

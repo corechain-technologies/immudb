@@ -241,6 +241,7 @@
 | srcPort | [uint32](#uint32) |  |  |
 | followerUsr | [string](#string) |  |  |
 | followerPwd | [string](#string) |  |  |
+| excludeCommitTime | [bool](#bool) |  |  |
 
 
 
