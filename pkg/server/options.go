@@ -77,6 +77,11 @@ type RemoteStorageOptions struct {
 	S3BucketName  string
 	S3Location    string
 	S3PathPrefix  string
+
+	AZStorage   bool
+	AZEndpoint  string
+	AZContainer string
+	AZPrefix    string
 }
 
 type ReplicationOptions struct {
@@ -124,6 +129,7 @@ func DefaultOptions() *Options {
 func DefaultRemoteStorageOptions() *RemoteStorageOptions {
 	return &RemoteStorageOptions{
 		S3Storage: false,
+		AZStorage: false,
 	}
 }
 
@@ -257,7 +263,12 @@ func (o *Options) String() string {
 	if o.SigningKey != "" {
 		opts = append(opts, rightPad("Signing key", o.SigningKey))
 	}
-	if o.RemoteStorageOptions.S3Storage {
+	if o.RemoteStorageOptions.AZStorage {
+		opts = append(opts, "Azure Storage")
+		opts = append(opts, rightPad("   endpoint", o.RemoteStorageOptions.AZEndpoint))
+		opts = append(opts, rightPad("   container", o.RemoteStorageOptions.AZContainer))
+		opts = append(opts, rightPad("   prefix", o.RemoteStorageOptions.AZPrefix))
+	} else if o.RemoteStorageOptions.S3Storage {
 		opts = append(opts, "S3 storage")
 		opts = append(opts, rightPad("   endpoint", o.RemoteStorageOptions.S3Endpoint))
 		opts = append(opts, rightPad("   bucket name", o.RemoteStorageOptions.S3BucketName))
@@ -424,6 +435,26 @@ func (opts *RemoteStorageOptions) WithS3Location(s3Location string) *RemoteStora
 
 func (opts *RemoteStorageOptions) WithS3PathPrefix(s3PathPrefix string) *RemoteStorageOptions {
 	opts.S3PathPrefix = s3PathPrefix
+	return opts
+}
+
+func (opts *RemoteStorageOptions) WithAZStorage(enable bool) *RemoteStorageOptions {
+	opts.AZStorage = enable
+	return opts
+}
+
+func (opts *RemoteStorageOptions) WithAZEndpoint(azEndpoint string) *RemoteStorageOptions {
+	opts.AZEndpoint = azEndpoint
+	return opts
+}
+
+func (opts *RemoteStorageOptions) WithAZContainer(azContainer string) *RemoteStorageOptions {
+	opts.AZContainer = azContainer
+	return opts
+}
+
+func (opts *RemoteStorageOptions) WithAZPrefix(azPrefix string) *RemoteStorageOptions {
+	opts.AZPrefix = azPrefix
 	return opts
 }
 

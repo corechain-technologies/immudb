@@ -73,6 +73,11 @@ func parseOptions() (options *server.Options, err error) {
 	s3Location := viper.GetString("s3-location")
 	s3PathPrefix := viper.GetString("s3-path-prefix")
 
+	azStorage := viper.GetBool("az-blob-storage")
+	azEndpoint := viper.GetString("az-blob-endpoint")
+	azContainer := viper.GetString("az-blob-container")
+	azPrefix := viper.GetString("az-blob-prefix")
+
 	remoteStorageOptions := server.DefaultRemoteStorageOptions().
 		WithS3Storage(s3Storage).
 		WithS3Endpoint(s3Endpoint).
@@ -80,7 +85,12 @@ func parseOptions() (options *server.Options, err error) {
 		WithS3SecretKey(s3SecretKey).
 		WithS3BucketName(s3BucketName).
 		WithS3Location(s3Location).
-		WithS3PathPrefix(s3PathPrefix)
+		WithS3PathPrefix(s3PathPrefix).
+
+		WithAZStorage(azStorage).
+		WithAZEndpoint(azEndpoint).
+		WithAZContainer(azContainer).
+		WithAZPrefix(azPrefix)
 
 	sessionOptions := sessions.DefaultOptions().
 		WithSessionGuardCheckInterval(viper.GetDuration("sessions-guard-check-interval")).

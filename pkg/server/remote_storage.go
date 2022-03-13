@@ -8,10 +8,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/codenotary/immudb/embedded/appendable"
 	"github.com/codenotary/immudb/embedded/appendable/multiapp"
 	"github.com/codenotary/immudb/embedded/appendable/remoteapp"
 	"github.com/codenotary/immudb/embedded/remotestorage"
+	"github.com/codenotary/immudb/embedded/remotestorage/azure"
 	"github.com/codenotary/immudb/embedded/remotestorage/s3"
 	"github.com/codenotary/immudb/embedded/store"
 	"github.com/codenotary/immudb/pkg/errors"
@@ -22,7 +24,18 @@ var (
 )
 
 func (s *ImmuServer) createRemoteStorageInstance() (remotestorage.Storage, error) {
-	if s.Options.RemoteStorageOptions.S3Storage {
+	if s.Options.RemoteStorageOptions.AZStorage {
+		cred, err := azidentity.NewDefaultAzureCredential(nil)
+		if err != nil {
+			return nil, err
+		}
+		return azure.Open(
+			s.Options.RemoteStorageOptions.AZEndpoint,
+			s.Options.RemoteStorageOptions.AZContainer,
+			s.Options.RemoteStorageOptions.AZPrefix,
+			cred,
+		)
+	} else if s.Options.RemoteStorageOptions.S3Storage {
 		// S3 storage
 		return s3.Open(
 			s.Options.RemoteStorageOptions.S3Endpoint,
