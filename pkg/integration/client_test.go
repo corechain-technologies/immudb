@@ -595,6 +595,7 @@ func TestImmuClientDisconnect(t *testing.T) {
 	require.True(t, errors.Is(client.UpdateAuthConfig(ctx, auth.KindPassword), ic.ErrNotConnected))
 	require.True(t, errors.Is(client.UpdateMTLSConfig(ctx, false), ic.ErrNotConnected))
 	require.True(t, errors.Is(client.CompactIndex(ctx, &emptypb.Empty{}), ic.ErrNotConnected))
+	require.True(t, errors.Is(client.FlushIndex(ctx, 100, true), ic.ErrNotConnected))
 
 	_, err = client.Login(context.TODO(), []byte("user"), []byte("passwd"))
 	require.True(t, errors.Is(err.(immuErrors.ImmuError), ic.ErrNotConnected))
@@ -937,7 +938,7 @@ func TestImmuClient_SetAll(t *testing.T) {
 
 	setRequest = &schema.SetRequest{KVs: []*schema.KeyValue{
 		{Key: []byte("1,2,3"), Value: []byte("3,2,1")},
-		{Key: []byte("4,5,6"), Value: []byte("6,5,4"), Metadata: &schema.KVMetadata{NonIndexeable: true}},
+		{Key: []byte("4,5,6"), Value: []byte("6,5,4"), Metadata: &schema.KVMetadata{NonIndexable: true}},
 	}}
 
 	_, err = client.SetAll(ctx, setRequest)
@@ -949,7 +950,7 @@ func TestImmuClient_SetAll(t *testing.T) {
 	for _, kv := range setRequest.KVs {
 		i, err := client.Get(ctx, kv.Key)
 
-		if kv.Metadata != nil && kv.Metadata.NonIndexeable {
+		if kv.Metadata != nil && kv.Metadata.NonIndexable {
 			require.Contains(t, err.Error(), "key not found")
 		} else {
 			require.NoError(t, err)
@@ -990,7 +991,13 @@ func TestImmuClient_GetAll(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, entries.Entries, 1)
 
+	err = client.FlushIndex(ctx, 10, true)
+	require.NoError(t, err)
+
 	_, err = client.VerifiedSet(ctx, []byte(`bbb`), []byte(`val`))
+	require.NoError(t, err)
+
+	err = client.FlushIndex(ctx, 10, true)
 	require.NoError(t, err)
 
 	entries, err = client.GetAll(ctx, [][]byte{[]byte(`aaa`), []byte(`bbb`)})

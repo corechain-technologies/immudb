@@ -218,6 +218,43 @@
         ]
       }
     },
+    "/db/flushindex": {
+      "get": {
+        "operationId": "ImmuService_FlushIndex",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cleanupPercentage",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "synced",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
     "/db/get/{key}": {
       "get": {
         "operationId": "ImmuService_Get",
@@ -1811,6 +1848,10 @@
         "flushBufferSize": {
           "type": "integer",
           "format": "int64"
+        },
+        "cleanupPercentage": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -1823,7 +1864,7 @@
         "expiration": {
           "$ref": "#/definitions/schemaExpiration"
         },
-        "nonIndexeable": {
+        "nonIndexable": {
           "type": "boolean"
         }
       }

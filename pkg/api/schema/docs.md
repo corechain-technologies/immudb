@@ -26,6 +26,7 @@
     - [ErrorInfo](#immudb.schema.ErrorInfo)
     - [ExecAllRequest](#immudb.schema.ExecAllRequest)
     - [Expiration](#immudb.schema.Expiration)
+    - [FlushIndexRequest](#immudb.schema.FlushIndexRequest)
     - [HealthResponse](#immudb.schema.HealthResponse)
     - [HistoryRequest](#immudb.schema.HistoryRequest)
     - [ImmutableState](#immudb.schema.ImmutableState)
@@ -489,6 +490,22 @@
 
 
 
+<a name="immudb.schema.FlushIndexRequest"></a>
+
+### FlushIndexRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| cleanupPercentage | [uint32](#uint32) |  |  |
+| synced | [bool](#bool) |  |  |
+
+
+
+
+
+
 <a name="immudb.schema.HealthResponse"></a>
 
 ### HealthResponse
@@ -568,18 +585,19 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | synced | [bool](#bool) |  |  |
-| flushThreshold | [uint32](#uint32) |  |  |
-| syncThreshold | [uint32](#uint32) |  |  |
-| cacheSize | [uint32](#uint32) |  |  |
-| maxNodeSize | [uint32](#uint32) |  |  |
-| maxActiveSnapshots | [uint32](#uint32) |  |  |
-| renewSnapRootAfter | [uint64](#uint64) |  |  |
-| compactionThld | [uint32](#uint32) |  |  |
-| delayDuringCompaction | [uint32](#uint32) |  |  |
-| nodesLogMaxOpenedFiles | [uint32](#uint32) |  |  |
-| historyLogMaxOpenedFiles | [uint32](#uint32) |  |  |
-| commitLogMaxOpenedFiles | [uint32](#uint32) |  |  |
-| flushBufferSize | [uint32](#uint32) |  |  |
+| flushThreshold | [uint32](#uint32) |  | ignored with zero value |
+| syncThreshold | [uint32](#uint32) |  | ignored with zero value |
+| cacheSize | [uint32](#uint32) |  | ignored with zero value |
+| maxNodeSize | [uint32](#uint32) |  | ignored with zero value |
+| maxActiveSnapshots | [uint32](#uint32) |  | ignored with zero value |
+| renewSnapRootAfter | [uint64](#uint64) |  | ignored with zero value |
+| compactionThld | [uint32](#uint32) |  | ignored with zero value |
+| delayDuringCompaction | [uint32](#uint32) |  | ignored with zero value |
+| nodesLogMaxOpenedFiles | [uint32](#uint32) |  | ignored with zero value |
+| historyLogMaxOpenedFiles | [uint32](#uint32) |  | ignored with zero value |
+| commitLogMaxOpenedFiles | [uint32](#uint32) |  | ignored with zero value |
+| flushBufferSize | [uint32](#uint32) |  | ignored with zero value |
+| cleanupPercentage | [uint32](#uint32) |  | ignored if greater than 100 |
 
 
 
@@ -596,7 +614,7 @@
 | ----- | ---- | ----- | ----------- |
 | deleted | [bool](#bool) |  |  |
 | expiration | [Expiration](#immudb.schema.Expiration) |  |  |
-| nonIndexeable | [bool](#bool) |  |  |
+| nonIndexable | [bool](#bool) |  |  |
 
 
 
@@ -1720,6 +1738,7 @@ immudb gRPC &amp; REST service
 | UseDatabase | [Database](#immudb.schema.Database) | [UseDatabaseReply](#immudb.schema.UseDatabaseReply) |  |
 | UpdateDatabase | [DatabaseSettings](#immudb.schema.DatabaseSettings) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
 | GetDatabaseSettings | [.google.protobuf.Empty](#google.protobuf.Empty) | [DatabaseSettings](#immudb.schema.DatabaseSettings) |  |
+| FlushIndex | [FlushIndexRequest](#immudb.schema.FlushIndexRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
 | CompactIndex | [.google.protobuf.Empty](#google.protobuf.Empty) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
 | ChangePermission | [ChangePermissionRequest](#immudb.schema.ChangePermissionRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
 | SetActiveUser | [SetActiveUserRequest](#immudb.schema.SetActiveUserRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |

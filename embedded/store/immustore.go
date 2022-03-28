@@ -428,6 +428,7 @@ func OpenWith(path string, vLogs []appendable.Appendable, txLog, cLog appendable
 		WithFlushThld(opts.IndexOpts.FlushThld).
 		WithSyncThld(opts.IndexOpts.SyncThld).
 		WithFlushBufferSize(opts.IndexOpts.FlushBufferSize).
+		WithCleanupPercentage(opts.IndexOpts.CleanupPercentage).
 		WithMaxActiveSnapshots(opts.IndexOpts.MaxActiveSnapshots).
 		WithMaxNodeSize(opts.IndexOpts.MaxNodeSize).
 		WithNodesLogMaxOpenedFiles(opts.IndexOpts.NodesLogMaxOpenedFiles).
@@ -690,6 +691,10 @@ func (s *ImmuStore) CompactIndex() error {
 		return ErrCompactionUnsupported
 	}
 	return s.indexer.CompactIndex()
+}
+
+func (s *ImmuStore) FlushIndex(cleanupPercentage int, synced bool) error {
+	return s.indexer.FlushIndex(cleanupPercentage, synced)
 }
 
 func maxTxSize(maxTxEntries, maxKeyLen, maxTxMetadataLen, maxKVMetadataLen int) int {

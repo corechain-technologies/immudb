@@ -39,6 +39,9 @@ func TestSnapshotSerialization(t *testing.T) {
 	require.NotNil(t, snapshot)
 	require.NoError(t, err)
 
+	_, _, _, _, err = snapshot.WriteTo(nil, nil, nil)
+	require.ErrorIs(t, err, ErrIllegalArguments)
+
 	dumpNBuf := new(bytes.Buffer)
 	dumpHBuf := new(bytes.Buffer)
 	wopts := &WriteOpts{
@@ -47,7 +50,7 @@ func TestSnapshotSerialization(t *testing.T) {
 		BaseHLogOffset: 0,
 		reportProgress: func(innerWritten, leafNodesWritten, keysWritten int) {},
 	}
-	_, _, _, err = snapshot.WriteTo(dumpNBuf, dumpHBuf, wopts)
+	_, _, _, _, err = snapshot.WriteTo(dumpNBuf, dumpHBuf, wopts)
 	require.NoError(t, err)
 	require.True(t, dumpNBuf.Len() == 0)
 
@@ -77,7 +80,7 @@ func TestSnapshotSerialization(t *testing.T) {
 		BaseHLogOffset: 0,
 		reportProgress: func(innerWritten, leafNodesWritten, keysWritten int) {},
 	}
-	_, _, _, err = snapshot.WriteTo(fulldumpNBuf, fulldumpHBuf, wopts)
+	_, _, _, _, err = snapshot.WriteTo(fulldumpNBuf, fulldumpHBuf, wopts)
 	require.NoError(t, err)
 	require.True(t, fulldumpNBuf.Len() > 0)
 
